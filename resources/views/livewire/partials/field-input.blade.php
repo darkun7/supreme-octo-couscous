@@ -27,7 +27,7 @@
                 >
                     <option value="">— Select —</option>
                     @foreach($field->options as $option)
-                        <option value="{{ $option }}" {{ $value == $option ? 'selected' : '' }}>{{ $option }}</option>
+                        <option value="{{ $option }}" {{ (!is_array($value) && $value == $option) ? 'selected' : '' }}>{{ $option }}</option>
                     @endforeach
                 </select>
             @elseif($field->input_type === 'textarea')
@@ -36,13 +36,13 @@
                     class="form-textarea"
                     wire:change="updateField('{{ $fullKey }}', $event.target.value)"
                     placeholder="{{ $field->help_text ?? '' }}"
-                >{{ $value }}</textarea>
+                >{{ is_array($value) ? json_encode($value) : $value }}</textarea>
             @else
                 <input
                     type="text"
                     id="{{ $fieldId }}"
                     class="form-input"
-                    value="{{ $value }}"
+                    value="{{ is_array($value) ? json_encode($value) : $value }}"
                     wire:change="updateField('{{ $fullKey }}', $event.target.value)"
                     placeholder="{{ $field->help_text ?? '' }}"
                 >
@@ -55,7 +55,7 @@
                 type="number"
                 id="{{ $fieldId }}"
                 class="form-input"
-                value="{{ $value ?? 0 }}"
+                value="{{ is_array($value) ? 0 : ($value ?? 0) }}"
                 wire:change="updateField('{{ $fullKey }}', $event.target.value)"
                 step="any"
                 style="max-width: 200px;"
@@ -89,14 +89,14 @@
                 <input
                     type="color"
                     id="{{ $fieldId }}"
-                    value="{{ $value ?? '#000000' }}"
+                    value="{{ is_array($value) ? '#000000' : ($value ?? '#000000') }}"
                     wire:change="updateField('{{ $fullKey }}', $event.target.value)"
                     style="width: 50px; height: 38px; padding: 2px; border: 1px solid var(--border-default); border-radius: var(--radius-sm); background: var(--bg-input); cursor: pointer;"
                 >
                 <input
                     type="text"
                     class="form-input font-mono"
-                    value="{{ $value ?? '#000000' }}"
+                    value="{{ is_array($value) ? '#000000' : ($value ?? '#000000') }}"
                     wire:change="updateField('{{ $fullKey }}', $event.target.value)"
                     style="max-width: 120px;"
                     placeholder="#000000"
@@ -110,11 +110,11 @@
                 type="text"
                 id="{{ $fieldId }}"
                 class="form-input"
-                value="{{ $value }}"
+                value="{{ is_array($value) ? json_encode($value) : $value }}"
                 wire:change="updateField('{{ $fullKey }}', $event.target.value)"
                 placeholder="https://example.com/image.png"
             >
-            @if($value)
+            @if($value && !is_array($value))
                 <div class="mt-8" style="padding: 8px; background: var(--bg-tertiary); border-radius: var(--radius-sm); display: inline-block;">
                     <img src="{{ $value }}" alt="Preview" style="max-width: 100px; max-height: 100px; border-radius: 4px;">
                 </div>
@@ -200,7 +200,7 @@
                     <option value="">— Select {{ $field->label }} —</option>
                     @if(isset($relatedOptions[$field->key]))
                         @foreach($relatedOptions[$field->key] as $opt)
-                            <option value="{{ $opt['value'] }}" {{ $value == $opt['value'] ? 'selected' : '' }}>
+                            <option value="{{ $opt['value'] }}" {{ (!is_array($value) && $value == $opt['value']) ? 'selected' : '' }}>
                                 {{ $opt['label'] }}
                             </option>
                         @endforeach

@@ -14,6 +14,9 @@
                 <a href="{{ route('entries.index', $collection->slug) }}" class="btn btn-secondary">
                     📋 View Entries
                 </a>
+                <button wire:click="openImportForm" class="btn btn-secondary" title="Import fields from JSON structure">
+                    📥 Import from JSON
+                </button>
                 <button wire:click="create" class="btn btn-primary">
                     <span>+</span> Add Field
                 </button>
@@ -41,7 +44,7 @@
 
         {{-- Field List --}}
         @if(count($fields))
-            <div class="field-list">
+            <div class="field-list" id="sortable-field-list" wire:ignore.self>
                 @php
                     $rootFields = collect($fields)->whereNull('parent_key')->where('parent_key', '');
                     $rootFields = $rootFields->merge(collect($fields)->whereNull('parent_key'));
@@ -49,7 +52,9 @@
                 @endphp
 
                 @foreach($rootFields as $field)
+                  <div class="sortable-group" data-id="{{ $field['id'] }}">
                     <div class="field-item">
+                        <div class="drag-handle" style="cursor: grab; margin-right: 8px; font-size: 16px; opacity: 0.5;">☰</div>
                         <div class="field-item-key">{{ $field['key'] }}</div>
                         <span class="field-item-type field-type-{{ $field['type'] }}">{{ $field['type'] }}</span>
                         <div class="field-item-label">
@@ -109,6 +114,7 @@
                             </div>
                         @endforeach
                     @endif
+                  </div>
                 @endforeach
             </div>
         @else
@@ -250,4 +256,78 @@
             </div>
         </div>
     @endif
+
+    {{-- Import JSON Modal --}}
+    @if($showImportForm)
+        <div class="modal-backdrop" wire:click.self="closeImportForm">
+            <div class="modal-content">
+                <div class="modal-title">
+                    📥 Import Fields from JSON
+                </div>
+                
+                <div class="mb-16 text-sm text-secondary">
+                    Paste a sample JSON representation of your data. The system will automatically parse it and create fields, guessing the data types (string, number, array, object, color, etc.).
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Sample JSON Payload <span class="required">*</span></label>
+                    <textarea wire:model.defer="importJson" class="form-input font-mono" rows="10" placeholder='{
+  "name": "Sword",
+  "damage": 15,
+  "stats": {
+    "speed": 1.5,
+    "crit_chance": 0.2
+  },
+  "tags": ["weapon", "melee"]
+}'></textarea>
+                    @error('importJson') <div class="form-help" style="color:var(--danger)">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="modal-footer">
+                    <button wire:click="closeImportForm" class="btn btn-secondary">Cancel</button>
+                    <button wire:click="processImport" class="btn btn-primary">
+                        🚀 Parse & Auto-Generate Fields
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('livewire:load', function () {
+            function initSortable() {
+                let el = document.getElementById('sortable-field-list');
+                if (el && !el.sortableInstance) {
+                    el.sortableInstance = new Sortable(el, {
+                        animation: 150,
+                        handle: '.drag-handle',
+                        ghostClass: 'sortable-ghost',
+                        onEnd: function (evt) {
+                            let order = [];
+                            document.querySelectorAll('.sortable-group').forEach(item => {
+                                let id = item.getAttribute('data-id');
+                                if (id) order.push(id);
+                            });
+                            if (order.length > 0) {
+                                @this.updateOrder(order);
+                            }
+                        }
+                    });
+                }
+            }
+            
+            initSortable();
+
+            Livewire.hook('message.processed', (message, component) => {
+                initSortable();
+            });
+        });
+    </script>
+    <style>
+        .sortable-ghost {
+            opacity: 0.4;
+            background: var(--accent-glow) !important;
+        }
+    </style>
 </div>

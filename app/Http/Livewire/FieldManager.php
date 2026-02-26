@@ -12,6 +12,10 @@ class FieldManager extends Component
     public $fields = [];
     public $allCollections = [];
 
+    // Import state
+    public $showImportForm = false;
+    public $importJson = '';
+
     // Form state
     public $showForm = false;
     public $editingFieldId = null;
@@ -216,6 +220,17 @@ class FieldManager extends Component
         }
     }
 
+    public function updateOrder($orderedIds)
+    {
+        foreach ($orderedIds as $index => $id) {
+            GameCollectionField::where('game_collection_id', $this->collection->id)
+                ->where('id', $id)
+                ->update(['sort_order' => $index + 1]);
+        }
+        $this->loadFields();
+        $this->emit('notify', 'Fields reordered using drag and drop!');
+    }
+
     public function resetFieldForm()
     {
         $this->showForm = false;
@@ -276,5 +291,134 @@ class FieldManager extends Component
     public function render()
     {
         return view('livewire.field-manager');
+    }
+
+    public function openImportForm()
+    {
+        $this->importJson = '';
+        $this->showImportForm = true;
+    }
+
+    public function closeImportForm()
+    {
+        $this->importJson = '';
+        $this->showImportForm = false;
+        $this->resetErrorBag();
+    }
+
+    public function processImport()
+    {
+        $this->validate([
+            'importJson' => 'required|string'
+        ]);
+
+        $data = json_decode($this->importJson, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->addError('importJson', 'Invalid JSON payload. Please ensure it is valid JSON.');
+            return;
+        }
+
+        // Check if it's an array of objects
+        if (is_array($data) && count($data) > 0 && is_array($data[0]) && array_keys($data) === range(0, count($data) - 1)) {
+            $data = $data[0]; // Use the first item to deduce schema
+        } elseif (is_array($data) && empty($data)) {
+             $this->addError('importJson', 'The provided JSON array is empty.');
+             return;
+        } elseif (is_array($data) && array_keys($data) === range(0, count($data) - 1)) {
+             $this->addError('importJson', 'Please provide a JSON object or an array of objects, not a simple array of values.');
+             return;
+        }
+
+        if (!is_array($data)) {
+            $this->addError('importJson', 'Please provide a valid JSON object.');
+            return;
+        }
+
+        $this->generateFieldsFromJson($data);
+        $this->loadFields();
+        $this->closeImportForm();
+        $this->emit('notify', 'Fields imported successfully!');
+    }
+
+    protected function generateFieldsFromJson($data, $parentKey = '')
+    {
+        $maxSortOrder = GameCollectionField::where('game_collection_id', $this->collection->id)->max('sort_order') ?? 0;
+
+        foreach ($data as $key => $value) {
+            $maxSortOrder++;
+            
+            // Skip if field already exists
+            $exists = collect($this->fields)->where('key', $key)->where('parent_key', $parentKey === '' ? null : $parentKey)->first();
+            if ($exists) continue;
+
+            $type = 'string';
+            $is_array = false;
+            $nestedData = null;
+
+            if (is_int($value) || is_float($value)) {
+                $type = 'number';
+            } elseif (is_bool($value)) {
+                $type = 'boolean';
+            } elseif (is_array($value)) {
+                if (empty($value)) {
+                    $type = 'string'; // Default for empty array
+                    $is_array = true;
+                } elseif (array_keys($value) === range(0, count($value) - 1)) {
+                    // Sequential array
+                    $firstItem = $value[0];
+                    if (is_array($firstItem)) {
+                        $type = 'array_of_objects';
+                        $nestedData = $firstItem;
+                    } else {
+                        // Array of scalars
+                        if (is_int($firstItem) || is_float($firstItem)) $type = 'number';
+                        elseif (is_bool($firstItem)) $type = 'boolean';
+                        else $type = 'string';
+                        
+                        $is_array = true;
+                    }
+                } else {
+                    // Associative array (Object)
+                    $type = 'object';
+                    $nestedData = $value;
+                }
+            } elseif (is_string($value)) {
+                if (preg_match('/^#[a-fA-F0-9]{3,6}$/i', $value)) {
+                    $type = 'color';
+                } elseif (preg_match('/\.(jpg|png|gif|webp|jpeg)$/i', $value)) {
+                    $type = 'image_url';
+                }
+            }
+
+            // Create the field
+            $field = GameCollectionField::create([
+                'game_collection_id' => $this->collection->id,
+                'key' => $key,
+                'label' => $this->makeLabel($key),
+                'type' => $type,
+                'input_type' => $this->resolveInputType($type, 'text'),
+                'required' => false,
+                'is_array' => $is_array,
+                'parent_key' => $parentKey === '' ? null : $parentKey,
+                'relation_multiple' => false,
+                'sort_order' => $maxSortOrder
+            ]);
+            
+            // Add to local fields cache to prevent duplicates in current pass if keys repeat
+            $this->fields[] = $field->toArray();
+
+            if ($nestedData) {
+                $this->generateFieldsFromJson($nestedData, $key);
+            }
+        }
+    }
+
+    protected function makeLabel($key)
+    {
+        $label = str_replace(['_', '-'], ' ', $key);
+        // Add space before camel case
+        $label = preg_replace('/(?<!^)[A-Z]/', ' $0', $label);
+        return ucwords(trim($label));
     }
 }
