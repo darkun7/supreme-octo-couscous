@@ -1,0 +1,449 @@
+﻿{
+    "master_gear": {
+        "body_armor": {
+            "1": [
+                "body_armor_none_lv1",
+                "body_armor_none_lv8"
+            ],
+            "2": [
+                "body_armor_earth_lv30",
+                "body_armor_fire_lv30",
+                "body_armor_lightning_lv30",
+                "body_armor_none_lv15",
+                "body_armor_none_lv22",
+                "body_armor_none_lv30",
+                "body_armor_water_lv30",
+                "body_armor_wind_lv30"
+            ],
+            "3": [
+                "body_armor_none_lv38",
+                "body_armor_none_lv45"
+            ],
+            "4": [
+                "body_armor_earth_lv60",
+                "body_armor_fire_lv60",
+                "body_armor_lightning_lv60",
+                "body_armor_none_lv55",
+                "body_armor_none_lv65",
+                "body_armor_water_lv60",
+                "body_armor_wind_lv60"
+            ],
+            "5": [
+                "body_armor_earth_lv90",
+                "body_armor_fire_lv90",
+                "body_armor_lightning_lv90",
+                "body_armor_none_lv75",
+                "body_armor_none_lv85",
+                "body_armor_none_lv90",
+                "body_armor_water_lv90",
+                "body_armor_wind_lv90"
+            ]
+        },
+        "footwear": {
+            "1": [
+                "footwear_none_lv1",
+                "footwear_none_lv8"
+            ],
+            "2": [
+                "footwear_earth_lv30",
+                "footwear_fire_lv30",
+                "footwear_lightning_lv30",
+                "footwear_none_lv15",
+                "footwear_none_lv22",
+                "footwear_none_lv30",
+                "footwear_water_lv30",
+                "footwear_wind_lv30"
+            ],
+            "3": [
+                "footwear_none_lv38",
+                "footwear_none_lv45"
+            ],
+            "4": [
+                "footwear_earth_lv60",
+                "footwear_fire_lv60",
+                "footwear_lightning_lv60",
+                "footwear_none_lv55",
+                "footwear_none_lv65",
+                "footwear_water_lv60",
+                "footwear_wind_lv60"
+            ],
+            "5": [
+                "footwear_earth_lv90",
+                "footwear_fire_lv90",
+                "footwear_lightning_lv90",
+                "footwear_none_lv75",
+                "footwear_none_lv85",
+                "footwear_none_lv90",
+                "footwear_water_lv90",
+                "footwear_wind_lv90"
+            ]
+        },
+        "headwear": {
+            "1": [
+                "headwear_none_lv1",
+                "headwear_none_lv8"
+            ],
+            "2": [
+                "headwear_earth_lv30",
+                "headwear_fire_lv30",
+                "headwear_lightning_lv30",
+                "headwear_none_lv15",
+                "headwear_none_lv22",
+                "headwear_none_lv30",
+                "headwear_water_lv30",
+                "headwear_wind_lv30"
+            ],
+            "3": [
+                "headwear_none_lv38",
+                "headwear_none_lv45"
+            ],
+            "4": [
+                "headwear_earth_lv60",
+                "headwear_fire_lv60",
+                "headwear_lightning_lv60",
+                "headwear_none_lv55",
+                "headwear_none_lv65",
+                "headwear_water_lv60",
+                "headwear_wind_lv60"
+            ],
+            "5": [
+                "headwear_earth_lv90",
+                "headwear_fire_lv90",
+                "headwear_lightning_lv90",
+                "headwear_none_lv75",
+                "headwear_none_lv85",
+                "headwear_none_lv90",
+                "headwear_water_lv90",
+                "headwear_wind_lv90"
+            ]
+        },
+        "leg_armor": {
+            "1": [
+                "leg_armor_none_lv1",
+                "leg_armor_none_lv8"
+            ],
+            "2": [
+                "leg_armor_earth_lv30",
+                "leg_armor_fire_lv30",
+                "leg_armor_lightning_lv30",
+                "leg_armor_none_lv15",
+                "leg_armor_none_lv22",
+                "leg_armor_none_lv30",
+                "leg_armor_water_lv30",
+                "leg_armor_wind_lv30"
+            ],
+            "3": [
+                "leg_armor_none_lv38",
+                "leg_armor_none_lv45"
+            ],
+            "4": [
+                "leg_armor_earth_lv60",
+                "leg_armor_fire_lv60",
+                "leg_armor_lightning_lv60",
+                "leg_armor_none_lv55",
+                "leg_armor_none_lv65",
+                "leg_armor_water_lv60",
+                "leg_armor_wind_lv60"
+            ],
+            "5": [
+                "leg_armor_earth_lv90",
+                "leg_armor_fire_lv90",
+                "leg_armor_lightning_lv90",
+                "leg_armor_none_lv75",
+                "leg_armor_none_lv85",
+                "leg_armor_none_lv90",
+                "leg_armor_water_lv90",
+                "leg_armor_wind_lv90"
+            ]
+        }
+    },
+    "pet_gear": {
+        "bell": {
+            "1": [
+                "bell_earth_lv1",
+                "bell_fire_lv7",
+                "bell_lightning_lv5",
+                "bell_water_lv9",
+                "bell_wind_lv3"
+            ],
+            "2": [
+                "bell_earth_lv11",
+                "bell_earth_lv21",
+                "bell_fire_lv17",
+                "bell_fire_lv27",
+                "bell_lightning_lv15",
+                "bell_lightning_lv25",
+                "bell_water_lv19",
+                "bell_water_lv29",
+                "bell_wind_lv13",
+                "bell_wind_lv23"
+            ],
+            "3": [
+                "bell_earth_lv31",
+                "bell_earth_lv41",
+                "bell_fire_lv37",
+                "bell_fire_lv47",
+                "bell_lightning_lv35",
+                "bell_lightning_lv45",
+                "bell_water_lv39",
+                "bell_water_lv49",
+                "bell_wind_lv33",
+                "bell_wind_lv43"
+            ],
+            "4": [
+                "bell_earth_lv51",
+                "bell_earth_lv61",
+                "bell_fire_lv57",
+                "bell_fire_lv67",
+                "bell_lightning_lv55",
+                "bell_lightning_lv65",
+                "bell_water_lv59",
+                "bell_water_lv69",
+                "bell_wind_lv53",
+                "bell_wind_lv63"
+            ],
+            "5": [
+                "bell_earth_lv71",
+                "bell_earth_lv81",
+                "bell_fire_lv77",
+                "bell_fire_lv87",
+                "bell_lightning_lv75",
+                "bell_lightning_lv85",
+                "bell_water_lv79",
+                "bell_water_lv89",
+                "bell_wind_lv73",
+                "bell_wind_lv83"
+            ]
+        },
+        "charm": {
+            "1": [
+                "charm_earth_lv7",
+                "charm_fire_lv3",
+                "charm_lightning_lv1",
+                "charm_water_lv5",
+                "charm_wind_lv9"
+            ],
+            "2": [
+                "charm_earth_lv17",
+                "charm_earth_lv27",
+                "charm_fire_lv13",
+                "charm_fire_lv23",
+                "charm_lightning_lv11",
+                "charm_lightning_lv21",
+                "charm_water_lv15",
+                "charm_water_lv25",
+                "charm_wind_lv19",
+                "charm_wind_lv29"
+            ],
+            "3": [
+                "charm_earth_lv37",
+                "charm_earth_lv47",
+                "charm_fire_lv33",
+                "charm_fire_lv43",
+                "charm_lightning_lv31",
+                "charm_lightning_lv41",
+                "charm_water_lv35",
+                "charm_water_lv45",
+                "charm_wind_lv39",
+                "charm_wind_lv49"
+            ],
+            "4": [
+                "charm_earth_lv57",
+                "charm_earth_lv67",
+                "charm_fire_lv53",
+                "charm_fire_lv63",
+                "charm_lightning_lv51",
+                "charm_lightning_lv61",
+                "charm_water_lv55",
+                "charm_water_lv65",
+                "charm_wind_lv59",
+                "charm_wind_lv69"
+            ],
+            "5": [
+                "charm_earth_lv77",
+                "charm_earth_lv87",
+                "charm_fire_lv73",
+                "charm_fire_lv83",
+                "charm_lightning_lv71",
+                "charm_lightning_lv81",
+                "charm_water_lv75",
+                "charm_water_lv85",
+                "charm_wind_lv79",
+                "charm_wind_lv89"
+            ]
+        },
+        "collar": {
+            "1": [
+                "collar_earth_lv5",
+                "collar_fire_lv1",
+                "collar_lightning_lv9",
+                "collar_water_lv3",
+                "collar_wind_lv7"
+            ],
+            "2": [
+                "collar_earth_lv15",
+                "collar_earth_lv25",
+                "collar_fire_lv11",
+                "collar_fire_lv21",
+                "collar_lightning_lv19",
+                "collar_lightning_lv29",
+                "collar_water_lv13",
+                "collar_water_lv23",
+                "collar_wind_lv17",
+                "collar_wind_lv27"
+            ],
+            "3": [
+                "collar_earth_lv35",
+                "collar_earth_lv45",
+                "collar_fire_lv31",
+                "collar_fire_lv41",
+                "collar_lightning_lv39",
+                "collar_lightning_lv49",
+                "collar_water_lv33",
+                "collar_water_lv43",
+                "collar_wind_lv37",
+                "collar_wind_lv47"
+            ],
+            "4": [
+                "collar_earth_lv55",
+                "collar_earth_lv65",
+                "collar_fire_lv51",
+                "collar_fire_lv61",
+                "collar_lightning_lv59",
+                "collar_lightning_lv69",
+                "collar_water_lv53",
+                "collar_water_lv63",
+                "collar_wind_lv57",
+                "collar_wind_lv67"
+            ],
+            "5": [
+                "collar_earth_lv75",
+                "collar_earth_lv85",
+                "collar_fire_lv71",
+                "collar_fire_lv81",
+                "collar_lightning_lv79",
+                "collar_lightning_lv89",
+                "collar_lightning_lv89_1",
+                "collar_water_lv73",
+                "collar_water_lv83",
+                "collar_wind_lv77",
+                "collar_wind_lv87"
+            ]
+        },
+        "harness": {
+            "1": [
+                "harness_earth_lv9",
+                "harness_fire_lv5",
+                "harness_lightning_lv3",
+                "harness_water_lv7",
+                "harness_wind_lv1"
+            ],
+            "2": [
+                "harness_earth_lv19",
+                "harness_earth_lv29",
+                "harness_fire_lv15",
+                "harness_fire_lv25",
+                "harness_lightning_lv13",
+                "harness_lightning_lv23",
+                "harness_water_lv17",
+                "harness_water_lv27",
+                "harness_wind_lv11",
+                "harness_wind_lv21"
+            ],
+            "3": [
+                "harness_earth_lv39",
+                "harness_earth_lv49",
+                "harness_fire_lv35",
+                "harness_fire_lv45",
+                "harness_lightning_lv33",
+                "harness_lightning_lv43",
+                "harness_water_lv37",
+                "harness_water_lv47",
+                "harness_wind_lv31",
+                "harness_wind_lv41"
+            ],
+            "4": [
+                "harness_earth_lv59",
+                "harness_earth_lv69",
+                "harness_fire_lv55",
+                "harness_fire_lv65",
+                "harness_lightning_lv53",
+                "harness_lightning_lv63",
+                "harness_water_lv57",
+                "harness_water_lv67",
+                "harness_wind_lv51",
+                "harness_wind_lv61"
+            ],
+            "5": [
+                "harness_earth_lv79",
+                "harness_earth_lv89",
+                "harness_fire_lv75",
+                "harness_fire_lv85",
+                "harness_lightning_lv73",
+                "harness_lightning_lv83",
+                "harness_water_lv77",
+                "harness_water_lv87",
+                "harness_wind_lv71",
+                "harness_wind_lv81"
+            ]
+        },
+        "toy": {
+            "1": [
+                "toy_earth_lv3",
+                "toy_fire_lv9",
+                "toy_lightning_lv7",
+                "toy_water_lv1",
+                "toy_wind_lv5"
+            ],
+            "2": [
+                "toy_earth_lv13",
+                "toy_earth_lv23",
+                "toy_fire_lv19",
+                "toy_fire_lv29",
+                "toy_lightning_lv17",
+                "toy_lightning_lv27",
+                "toy_water_lv11",
+                "toy_water_lv21",
+                "toy_wind_lv15",
+                "toy_wind_lv25"
+            ],
+            "3": [
+                "toy_earth_lv33",
+                "toy_earth_lv43",
+                "toy_fire_lv39",
+                "toy_fire_lv49",
+                "toy_lightning_lv37",
+                "toy_lightning_lv47",
+                "toy_water_lv31",
+                "toy_water_lv41",
+                "toy_wind_lv35",
+                "toy_wind_lv45"
+            ],
+            "4": [
+                "toy_earth_lv53",
+                "toy_earth_lv63",
+                "toy_fire_lv59",
+                "toy_fire_lv69",
+                "toy_lightning_lv57",
+                "toy_lightning_lv67",
+                "toy_water_lv51",
+                "toy_water_lv61",
+                "toy_wind_lv55",
+                "toy_wind_lv65"
+            ],
+            "5": [
+                "toy_earth_lv73",
+                "toy_earth_lv83",
+                "toy_fire_lv79",
+                "toy_fire_lv89",
+                "toy_fire_lv89_1",
+                "toy_lightning_lv77",
+                "toy_lightning_lv87",
+                "toy_water_lv71",
+                "toy_water_lv81",
+                "toy_wind_lv75",
+                "toy_wind_lv85"
+            ]
+        }
+    }
+}

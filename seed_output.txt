@@ -1,0 +1,38 @@
+﻿      ≡ƒôï type: enum with 5 values
+Γ£à ΓÜí Skills: 66 entries, 6 fields (1 enums)
+      ≡ƒôï type: enum with 4 values
+      ≡ƒôï effect: enum with 3 values
+Γ£à ≡ƒÄÆ Items: 78 entries, 27 fields (2 enums)
+      ≡ƒôï element: enum with 6 values
+      ≡ƒôï set_group: enum with 15 values
+      ≡ƒôï equipment_slot: enum with 9 values
+      ≡ƒôï equipment_type: enum with 2 values
+Γ£à ΓÜö∩╕Å Equipment: 335 entries, 28 fields (4 enums)
+Γ£à ≡ƒ¢Æ Shop Items: 8 entries, 4 fields
+Γ£à ≡ƒæ╣ Enemies: 22 entries, 31 fields
+      ≡ƒôï element: enum with 5 values
+Γ£à ≡ƒÉ╛ Pets: 30 entries, 10 fields (1 enums)
+Γ£à ≡ƒù║∩╕Å Areas: 29 entries, 5 fields
+Γ£à ≡ƒôì Enemy Spawn Areas: 22 entries, 2 fields
+Γ£à ≡ƒÉú Pet Spawn Areas: 29 entries, 2 fields
+Γ£à ≡ƒôª Resource Boxes: 3 entries, 8 fields
+Γ£à ≡ƒæ╖ Jobs: 9 entries, 11 fields
+      ≡ƒôï resource_type: enum with 4 values
+Γ£à ≡ƒÄú Job Loots: 4 entries, 45 fields (1 enums)
+ΓÜá∩╕Å  Skipping craftings.json ΓÇö file not found
+ΓÜá∩╕Å  Skipping crafting_gears.json ΓÇö file not found
+ΓÜá∩╕Å  Skipping rule_craftings.json ΓÇö invalid JSON
+   ≡ƒöù enemies.skill_ids ΓåÆ skills
+   ≡ƒöù enemies.drop_table.item_id ΓåÆ items
+   ≡ƒöù enemies.box_drop_table.box_id ΓåÆ resource_boxes
+   ≡ƒöù pets.skill_ids ΓåÆ skills
+   ≡ƒöù resource_boxes.drop_table.item_id ΓåÆ items
+   ≡ƒöù enemy_spawn_areas.enemy_id ΓåÆ enemies
+   ≡ƒöù enemy_spawn_areas.area_ids ΓåÆ areas
+   ≡ƒöù pet_spawn_areas.area_id ΓåÆ areas
+   ≡ƒöù pet_spawn_areas.pet_ids ΓåÆ pets
+   ≡ƒöù shop_items.item_id ΓåÆ items
+   ≡ƒöù jobs.pre_req.job ΓåÆ jobs
+
+≡ƒÄ« Game data seeding complete!
+Database seeding completed successfully.

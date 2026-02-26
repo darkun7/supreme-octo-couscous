@@ -1,0 +1,64 @@
+﻿Dropped all tables successfully.
+Migration table created successfully.
+Migrating: 2014_10_12_000000_create_users_table
+Migrated:  2014_10_12_000000_create_users_table (131.96ms)
+Migrating: 2014_10_12_100000_create_password_resets_table
+Migrated:  2014_10_12_100000_create_password_resets_table (106.70ms)
+Migrating: 2019_08_19_000000_create_failed_jobs_table
+Migrated:  2019_08_19_000000_create_failed_jobs_table (99.02ms)
+Migrating: 2019_12_14_000001_create_personal_access_tokens_table
+Migrated:  2019_12_14_000001_create_personal_access_tokens_table (129.98ms)
+Migrating: 2026_02_23_000000_create_games_table
+Migrated:  2026_02_23_000000_create_games_table (125.74ms)
+Migrating: 2026_02_23_000001_create_game_collections_table
+Migrated:  2026_02_23_000001_create_game_collections_table (286.43ms)
+Migrating: 2026_02_23_000002_create_game_collection_fields_table
+Migrated:  2026_02_23_000002_create_game_collection_fields_table (320.37ms)
+Migrating: 2026_02_23_000003_create_game_entries_table
+Migrated:  2026_02_23_000003_create_game_entries_table (178.93ms)
+Migrating: 2026_02_25_131726_create_game_user_table
+Migrated:  2026_02_25_131726_create_game_user_table (345.14ms)
+Migrating: 2026_02_25_192635_add_type_to_game_collections_table
+Migrated:  2026_02_25_192635_add_type_to_game_collections_table (163.81ms)
+Seeding: Database\Seeders\GameDataSeeder
+      ≡ƒôï type: enum with 5 values
+Γ£à ΓÜí Skills: 66 entries, 6 fields (1 enums)
+      ≡ƒôï type: enum with 4 values
+      ≡ƒôï effect: enum with 3 values
+Γ£à ≡ƒÄÆ Items: 78 entries, 27 fields (2 enums)
+      ≡ƒôï element: enum with 6 values
+      ≡ƒôï set_group: enum with 15 values
+      ≡ƒôï equipment_slot: enum with 9 values
+      ≡ƒôï equipment_type: enum with 2 values
+Γ£à ΓÜö∩╕Å Equipment: 335 entries, 28 fields (4 enums)
+Γ£à ≡ƒ¢Æ Shop Items: 8 entries, 4 fields
+Γ£à ≡ƒæ╣ Enemies: 22 entries, 31 fields
+      ≡ƒôï element: enum with 5 values
+Γ£à ≡ƒÉ╛ Pets: 30 entries, 10 fields (1 enums)
+Γ£à ≡ƒù║∩╕Å Areas: 29 entries, 5 fields
+Γ£à ≡ƒôì Enemy Spawn Areas: 22 entries, 2 fields
+Γ£à ≡ƒÉú Pet Spawn Areas: 29 entries, 2 fields
+Γ£à ≡ƒôª Resource Boxes: 3 entries, 8 fields
+Γ£à ≡ƒæ╖ Jobs: 9 entries, 11 fields
+      ≡ƒôï resource_type: enum with 4 values
+Γ£à ≡ƒÄú Job Loots: 4 entries, 45 fields (1 enums)
+ΓÜá∩╕Å  Skipping craftings.json ΓÇö file not found
+ΓÜá∩╕Å  Skipping crafting_gears.json ΓÇö file not found
+Γ£à ≡ƒô£ Crafting Rules: static JSON loaded
+   ≡ƒöù enemies.skill_ids ΓåÆ skills
+   ≡ƒöù enemies.drop_table.item_id ΓåÆ items
+   ≡ƒöù enemies.box_drop_table.box_id ΓåÆ resource_boxes
+   ≡ƒöù pets.skill_ids ΓåÆ skills
+   ≡ƒöù resource_boxes.drop_table.item_id ΓåÆ items
+   ≡ƒöù enemy_spawn_areas.enemy_id ΓåÆ enemies
+   ≡ƒöù enemy_spawn_areas.area_ids ΓåÆ areas
+   ≡ƒöù pet_spawn_areas.area_id ΓåÆ areas
+   ≡ƒöù pet_spawn_areas.pet_ids ΓåÆ pets
+   ≡ƒöù shop_items.item_id ΓåÆ items
+   ≡ƒöù jobs.pre_req.job ΓåÆ jobs
+
+≡ƒÄ« Game data seeding complete!
+Seeded:  Database\Seeders\GameDataSeeder (2,772.52ms)
+Seeding: Database\Seeders\UserSeeder
+Seeded:  Database\Seeders\UserSeeder (226.49ms)
+Database seeding completed successfully.
