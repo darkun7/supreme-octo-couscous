@@ -318,21 +318,26 @@ class FieldManager extends Component
             $this->addError('importJson', 'Invalid JSON payload. Please ensure it is valid JSON.');
             return;
         }
-
         // Check if it's an array of objects
-        if (is_array($data) && count($data) > 0 && is_array($data[0]) && array_keys($data) === range(0, count($data) - 1)) {
-            $data = $data[0]; // Use the first item to deduce schema
-        } elseif (is_array($data) && empty($data)) {
-             $this->addError('importJson', 'The provided JSON array is empty.');
-             return;
-        } elseif (is_array($data) && array_keys($data) === range(0, count($data) - 1)) {
-             $this->addError('importJson', 'Please provide a JSON object or an array of objects, not a simple array of values.');
-             return;
-        }
-
         if (!is_array($data)) {
             $this->addError('importJson', 'Please provide a valid JSON object.');
             return;
+        }
+        // Check if it's a list (array with numeric keys)
+        $isList = array_keys($data) === range(0, count($data) - 1);
+        if ($isList) {
+
+            if (empty($data)) {
+                $this->addError('importJson', 'The provided JSON array is empty.');
+                return;
+            }
+            // If first item is an object → valid array of objects
+            if (is_array($data[0])) {
+                $data = $data[0];
+            } else {
+                $this->addError('importJson', 'Please provide a JSON object or an array of objects, not a simple array of values.');
+                return;
+            }
         }
 
         $this->generateFieldsFromJson($data);
