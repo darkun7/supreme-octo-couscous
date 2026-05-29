@@ -77,42 +77,67 @@
                     {{-- Nested Object Fields --}}
                     @foreach($objectFields as $objectField)
                         @if($objectField->type === 'object')
-                            <div class="object-group mb-20">
+                            @php
+                                $objectVal = data_get($formData, $objectField->key);
+                                $isObjectError = $objectVal !== null && !is_array($objectVal);
+                            @endphp
+                            <div class="object-group mb-20" style="{{ $isObjectError ? 'border-color: var(--danger);' : '' }}">
                                 <div class="object-group-header">
                                     <div class="object-group-title">
                                         📦 {{ $objectField->label }}
                                         <span class="badge badge-info">object</span>
+                                        @if($isObjectError)
+                                            <span class="badge badge-danger" style="background: var(--danger); color: white; margin-left: 8px;">⚠️ Type Error: Got {{ gettype($objectVal) }}</span>
+                                        @endif
                                     </div>
                                 </div>
 
-                                @php
-                                    $childFields = $fields->where('parent_key', $objectField->key);
-                                @endphp
+                                @if($isObjectError)
+                                    <div style="padding: 16px; font-size: 13px; color: var(--danger); background: rgba(239, 68, 68, 0.05); line-height: 1.5; border-radius: 0 0 var(--radius-md) var(--radius-md);">
+                                        Existing data is not an object/associative array (value: <code>{{ json_encode($objectVal) }}</code>). Saving will overwrite this to the correct format.
+                                    </div>
+                                @else
+                                    @php
+                                        $childFields = $fields->where('parent_key', $objectField->key);
+                                    @endphp
 
-                                @foreach($childFields as $child)
-                                    @include('livewire.partials.field-input', [
-                                        'field' => $child,
-                                        'keyPrefix' => $objectField->key . '.',
-                                        'value' => data_get($formData, $objectField->key . '.' . $child->key),
-                                    ])
-                                @endforeach
+                                    @foreach($childFields as $child)
+                                        @include('livewire.partials.field-input', [
+                                            'field' => $child,
+                                            'keyPrefix' => $objectField->key . '.',
+                                            'value' => data_get($formData, $objectField->key . '.' . $child->key),
+                                        ])
+                                    @endforeach
+                                @endif
                             </div>
                         @elseif($objectField->type === 'array_of_objects')
-                            <div class="object-group mb-20">
+                            @php
+                                $arrayItems = data_get($formData, $objectField->key, []);
+                                $isArrayError = !is_array($arrayItems);
+                                if ($isArrayError) {
+                                    $arrayItems = [];
+                                }
+                                $childFields = $fields->where('parent_key', $objectField->key);
+                            @endphp
+                            <div class="object-group mb-20" style="{{ $isArrayError ? 'border-color: var(--danger);' : '' }}">
                                 <div class="object-group-header">
                                     <div class="object-group-title">
                                         📋 {{ $objectField->label }}
                                         <span class="badge badge-info">array of objects</span>
+                                        @if($isArrayError)
+                                            <span class="badge badge-danger" style="background: var(--danger); color: white; margin-left: 8px;">⚠️ Type Error: Got {{ gettype(data_get($formData, $objectField->key)) }}</span>
+                                        @endif
                                     </div>
                                     <button wire:click="addObjectItem('{{ $objectField->key }}')" class="btn btn-sm btn-primary">
                                         + Add Item
                                     </button>
                                 </div>
 
-                                @php
-                                    $childFields = $fields->where('parent_key', $objectField->key);
-                                    $arrayItems = data_get($formData, $objectField->key, []);
-                                @endphp
+                                @if($isArrayError)
+                                    <div style="padding: 16px; font-size: 13px; color: var(--danger); background: rgba(239, 68, 68, 0.05); line-height: 1.5;">
+                                        Existing data is not an array of objects (value: <code>{{ json_encode(data_get($formData, $objectField->key)) }}</code>). Saving will overwrite this to the correct format.
+                                    </div>
+                                @endif
 
                                 <div class="array-objects-container">
                                     @forelse($arrayItems as $idx => $item)

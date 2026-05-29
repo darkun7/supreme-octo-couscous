@@ -42,7 +42,7 @@ class FieldManager extends Component
     protected $rules = [
         'fieldForm.key' => 'required|string|max:255',
         'fieldForm.label' => 'required|string|max:255',
-        'fieldForm.type' => 'required|in:string,number,boolean,array,object,relation,array_of_objects,color,image_url',
+        'fieldForm.type' => 'required|in:string,number,boolean,array,object,relation,array_of_objects,color,image_url,double,float',
         'fieldForm.input_type' => 'required|string|max:50',
         'fieldForm.options' => 'nullable|string',
         'fieldForm.default_value' => 'nullable|string',
@@ -263,6 +263,8 @@ class FieldManager extends Component
         $defaults = [
             'string' => 'text',
             'number' => 'number',
+            'double' => 'number',
+            'float' => 'number',
             'boolean' => 'checkbox',
             'array' => 'tags',
             'object' => 'object',

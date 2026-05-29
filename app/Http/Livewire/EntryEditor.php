@@ -90,6 +90,8 @@ class EntryEditor extends Component
 
         switch ($field->type) {
             case 'number': return 0;
+            case 'double':
+            case 'float': return 0.0;
             case 'boolean': return false;
             case 'string': return '';
             case 'relation': return $field->relation_multiple ? [] : '';
@@ -158,6 +160,9 @@ class EntryEditor extends Component
         switch ($field->type) {
             case 'number':
                 return is_numeric($value) ? (strpos($value, '.') !== false ? (float) $value : (int) $value) : 0;
+            case 'double':
+            case 'float':
+                return is_numeric($value) ? (float) $value : 0.0;
             case 'boolean':
                 return filter_var($value, FILTER_VALIDATE_BOOLEAN);
             default:

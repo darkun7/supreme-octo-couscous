@@ -3,6 +3,43 @@
 @php
     $fullKey = $keyPrefix . $field->key;
     $fieldId = 'field_' . str_replace('.', '_', $fullKey);
+
+    // Type validation check
+    $typeError = null;
+    if ($value !== null) {
+        if ($field->is_array || $field->relation_multiple) {
+            if (!is_array($value)) {
+                $typeError = "Expected array, but got " . gettype($value) . " (value: " . (is_string($value) ? "\"$value\"" : json_encode($value)) . ")";
+            }
+        } else {
+            switch ($field->type) {
+                case 'number':
+                case 'double':
+                case 'float':
+                    if (!is_numeric($value)) {
+                        $typeError = "Expected number, but got " . gettype($value) . " (value: " . (is_string($value) ? "\"$value\"" : json_encode($value)) . ")";
+                    }
+                    break;
+                case 'boolean':
+                    if (!is_bool($value) && $value !== 1 && $value !== 0 && $value !== '1' && $value !== '0' && $value !== 'true' && $value !== 'false') {
+                        $typeError = "Expected boolean, but got " . gettype($value) . " (value: " . (is_string($value) ? "\"$value\"" : json_encode($value)) . ")";
+                    }
+                    break;
+                case 'string':
+                case 'color':
+                case 'image_url':
+                    if (is_array($value) || is_object($value)) {
+                        $typeError = "Expected string/scalar, but got " . gettype($value);
+                    }
+                    break;
+                case 'relation':
+                    if (is_array($value) || is_object($value)) {
+                        $typeError = "Expected single relation value, but got " . gettype($value);
+                    }
+                    break;
+            }
+        }
+    }
 @endphp
 
 <div class="form-group" wire:key="field-{{ $fullKey }}">
@@ -14,6 +51,12 @@
                 <span title="{{ $field->help_text }}" style="cursor:help; opacity:0.5;">ℹ️</span>
             @endif
         </label>
+    @endif
+
+    @if($typeError)
+        <div style="font-size: 11px; color: var(--danger); background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: var(--radius-sm); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; line-height: 1.4;">
+            ⚠️ <strong>Type Mismatch:</strong> {{ $typeError }}
+        </div>
     @endif
 
     @switch($field->type)
@@ -51,6 +94,8 @@
 
         {{-- NUMBER --}}
         @case('number')
+        @case('double')
+        @case('float')
             <input
                 type="number"
                 id="{{ $fieldId }}"

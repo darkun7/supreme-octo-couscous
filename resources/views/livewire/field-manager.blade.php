@@ -157,6 +157,7 @@
                         <select wire:model="fieldForm.type" class="form-select">
                             <option value="string">String</option>
                             <option value="number">Number</option>
+                            <option value="float">Float</option>
                             <option value="boolean">Boolean</option>
                             <option value="array">Array (simple)</option>
                             <option value="object">Object (nested)</option>

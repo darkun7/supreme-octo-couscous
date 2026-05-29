@@ -90,7 +90,7 @@
 
         {{-- Spreadsheet Table --}}
         <div class="card" style="padding: 0; overflow: hidden;">
-            <div style="overflow-x: auto; max-height: 75vh; overflow-y: auto;">
+            <div style="overflow-x: auto; max-height: 75vh; overflow-y: auto; padding-bottom: 80px;">
                 <table class="data-table spreadsheet-table" style="min-width: max-content;">
                     <thead style="position: sticky; top: 0; z-index: 10;">
                         <tr>
@@ -120,7 +120,11 @@
                                             $isDirty = isset($dirty[$cellKey]);
                                             $val = $row[$col['key']] ?? null;
                                         @endphp
-                                        <td style="padding: 2px 3px; {{ $isDirty ? 'background: rgba(234, 179, 8, 0.12); border: 1px solid var(--warning);' : '' }}">
+                                        <td class="spreadsheet-cell"
+                                            data-entry-id="{{ $entryId }}"
+                                            data-col-key="{{ $col['key'] }}"
+                                            data-col-type="{{ $col['type'] }}"
+                                            style="position: relative; padding: 2px 3px; {{ $isDirty ? 'background: rgba(234, 179, 8, 0.12); border: 1px solid var(--warning);' : '' }}">
                                             @if($col['type'] === 'boolean')
                                                 <div style="display: flex; justify-content: center;">
                                                     <input type="checkbox"
@@ -138,7 +142,7 @@
                                                         <option value="{{ $opt }}" {{ $val === $opt ? 'selected' : '' }}>{{ $opt }}</option>
                                                     @endforeach
                                                 </select>
-                                            @elseif($col['type'] === 'number')
+                                            @elseif($col['type'] === 'number' || $col['type'] === 'double' || $col['type'] === 'float')
                                                 <input type="number"
                                                     value="{{ $val ?? 0 }}"
                                                     wire:change="updateCell({{ $entryId }}, '{{ $col['key'] }}', $event.target.value)"
@@ -151,6 +155,9 @@
                                                     class="spreadsheet-input"
                                                     style="min-width: {{ strlen($val ?? '') > 20 ? '200px' : '100px' }};">
                                             @endif
+                                            
+                                            {{-- Excel-style fill handle --}}
+                                            <div class="fill-handle" style="display: none; position: absolute; bottom: 0; right: 0; width: 6px; height: 6px; background: var(--accent-primary); border: 1px solid white; cursor: ns-resize; z-index: 20;"></div>
                                         </td>
                                     @endif
                                 @endforeach
@@ -241,5 +248,161 @@
             0%, 100% { box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5); }
             50% { box-shadow: 0 4px 30px rgba(139, 92, 246, 0.8), 0 0 60px rgba(139, 92, 246, 0.3); }
         }
+
+        .spreadsheet-cell {
+            position: relative !important;
+        }
+        .spreadsheet-cell:focus-within .fill-handle {
+            display: block !important;
+        }
+        .spreadsheet-cell.drag-highlight {
+            background: rgba(99, 102, 241, 0.18) !important;
+            outline: 2px dashed var(--accent-primary) !important;
+            outline-offset: -2px;
+            z-index: 10;
+        }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initFillHandleDrag();
+        });
+
+        // Re-initialize after Livewire updates
+        window.addEventListener('livewire:load', () => {
+            initFillHandleDrag();
+        });
+        
+        document.addEventListener('livewire:update', () => {
+            initFillHandleDrag();
+        });
+
+        function initFillHandleDrag() {
+            let isDragging = false;
+            let startCell = null;
+            let startColKey = null;
+            let startValue = null;
+            let highlightedCells = [];
+
+            // Helper to get value from a cell
+            function getCellValue(cell) {
+                const select = cell.querySelector('select');
+                if (select) return select.value;
+                
+                const checkbox = cell.querySelector('input[type="checkbox"]');
+                if (checkbox) return checkbox.checked;
+                
+                const input = cell.querySelector('input[type="text"], input[type="number"]');
+                if (input) return input.value;
+                
+                return '';
+            }
+
+            // Helper to set value in a cell UI
+            function setCellValue(cell, value) {
+                const select = cell.querySelector('select');
+                if (select) {
+                    select.value = value;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    return;
+                }
+
+                const checkbox = cell.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                    checkbox.checked = (value === true || value === 'true' || value === 1 || value === '1');
+                    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                    return;
+                }
+
+                const input = cell.querySelector('input[type="text"], input[type="number"]');
+                if (input) {
+                    input.value = value;
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                    return;
+                }
+            }
+
+            // Delegate mousedown event on fill handles
+            document.querySelectorAll('.fill-handle').forEach(handle => {
+                if (handle.dataset.dragBound) return;
+                handle.dataset.dragBound = 'true';
+
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    isDragging = true;
+                    startCell = handle.closest('.spreadsheet-cell');
+                    if (!startCell) return;
+
+                    startColKey = startCell.dataset.colKey;
+                    startValue = getCellValue(startCell);
+                    highlightedCells = [startCell];
+                    startCell.classList.add('drag-highlight');
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+            });
+
+            function onMouseMove(e) {
+                if (!isDragging || !startCell) return;
+
+                const hoverElem = document.elementFromPoint(e.clientX, e.clientY);
+                if (!hoverElem) return;
+
+                const currentCell = hoverElem.closest('.spreadsheet-cell');
+                if (!currentCell) return;
+
+                // Only drag-fill within the same column
+                if (currentCell.dataset.colKey !== startColKey) return;
+
+                // Find all cells in this column
+                const allCellsInCol = Array.from(document.querySelectorAll(`.spreadsheet-cell[data-col-key="${startColKey}"]`));
+                const startIndex = allCellsInCol.indexOf(startCell);
+                const targetIndex = allCellsInCol.indexOf(currentCell);
+
+                if (startIndex === -1 || targetIndex === -1) return;
+
+                const minIdx = Math.min(startIndex, targetIndex);
+                const maxIdx = Math.max(startIndex, targetIndex);
+
+                highlightedCells.forEach(cell => cell.classList.remove('drag-highlight'));
+
+                highlightedCells = allCellsInCol.slice(minIdx, maxIdx + 1);
+                highlightedCells.forEach(cell => cell.classList.add('drag-highlight'));
+            }
+
+            function onMouseUp() {
+                if (!isDragging) return;
+                isDragging = false;
+
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+
+                const updates = [];
+                highlightedCells.forEach(cell => {
+                    cell.classList.remove('drag-highlight');
+                    if (cell !== startCell) {
+                        const entryId = cell.dataset.entryId;
+                        const colKey = cell.dataset.colKey;
+                        
+                        setCellValue(cell, startValue);
+                        updates.push({
+                            entryId: entryId,
+                            colKey: colKey,
+                            value: startValue
+                        });
+                    }
+                });
+
+                if (updates.length > 0) {
+                    @this.call('updateCells', updates);
+                }
+
+                startCell = null;
+                highlightedCells = [];
+            }
+        }
+    </script>
 </div>

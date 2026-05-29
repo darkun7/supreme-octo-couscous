@@ -119,7 +119,7 @@ class SpreadsheetEditor extends Component
         // Type cast
         $col = collect($this->columns)->firstWhere('key', $colKey);
         if ($col) {
-            if ($col['type'] === 'number') {
+            if (in_array($col['type'], ['number', 'double', 'float'])) {
                 $value = is_numeric($value) ? (strpos($value, '.') !== false ? (float) $value : (int) $value) : 0;
             } elseif ($col['type'] === 'boolean') {
                 $value = (bool) $value;
@@ -236,6 +236,31 @@ class SpreadsheetEditor extends Component
             if (strpos($key, $entryId . '.') === 0) return true;
         }
         return false;
+    }
+
+    /**
+     * Perform bulk cell updates.
+     */
+    public function updateCells($updates)
+    {
+        foreach ($updates as $up) {
+            $entryId = $up['entryId'];
+            $colKey = $up['colKey'];
+            $value = $up['value'];
+
+            $col = collect($this->columns)->firstWhere('key', $colKey);
+            if ($col) {
+                if (in_array($col['type'], ['number', 'double', 'float'])) {
+                    $value = is_numeric($value) ? (strpos($value, '.') !== false ? (float) $value : (int) $value) : 0;
+                } elseif ($col['type'] === 'boolean') {
+                    $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                }
+            }
+
+            $this->rows[$entryId][$colKey] = $value;
+            $this->dirty[$entryId . '.' . $colKey] = true;
+        }
+        $this->hasChanges = true;
     }
 
     public function render()
