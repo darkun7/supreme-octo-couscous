@@ -19,6 +19,8 @@ class SpreadsheetEditor extends Component
     public $savedCount = 0;
     public $hasChanges = false;
     public $slug;
+    public $isS3Configured = false;
+    public $saveToS3 = false;
 
     public function mount($slug)
     {
@@ -35,6 +37,11 @@ class SpreadsheetEditor extends Component
 
         $this->buildColumns();
         $this->loadRows();
+
+        $this->isS3Configured = GameCollection::isS3Configured();
+        if ($this->isS3Configured) {
+            $this->saveToS3 = true;
+        }
     }
 
     /**
@@ -161,7 +168,17 @@ class SpreadsheetEditor extends Component
         $this->hasChanges = false;
         $this->savedCount = $saved;
 
-        session()->flash('spreadsheet-saved', "Saved {$saved} entries!");
+        $msg = "Saved {$saved} entries!";
+        if ($this->isS3Configured && $this->saveToS3) {
+            try {
+                $path = $this->collection->uploadToS3();
+                $msg .= " & uploaded to S3!";
+            } catch (\Exception $e) {
+                $msg .= " (S3 upload failed: " . $e->getMessage() . ")";
+            }
+        }
+
+        session()->flash('spreadsheet-saved', $msg);
     }
 
     /**

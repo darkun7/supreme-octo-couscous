@@ -13,10 +13,12 @@ class ImportExport extends Component
     public $importJson = '';
     public $importMode = 'merge'; // merge or replace
     public $showImport = false;
+    public $isS3Configured = false;
 
     public function mount(GameCollection $collection)
     {
         $this->collection = $collection;
+        $this->isS3Configured = GameCollection::isS3Configured();
     }
 
     public function export()
@@ -60,37 +62,8 @@ class ImportExport extends Component
 
     public function uploadToS3()
     {
-        $entries = GameEntry::where('game_collection_id', $this->collection->id)
-            ->orderBy('sort_order')
-            ->get()
-            ->pluck('data');
-
-        $idField = $this->collection->id_field;
-        $exportData = [];
-
-        foreach ($entries as $data) {
-            $key = data_get($data, $idField) 
-                ?? data_get($data, strtolower($idField)) 
-                ?? data_get($data, strtoupper($idField))
-                ?? data_get($data, 'id')
-                ?? data_get($data, 'ID');
-                
-            if ($key !== null && $key !== '') {
-                $exportData[$key] = $data;
-            } else {
-                $exportData[] = $data;
-            }
-        }
-
-        $exportData = (object) $exportData;
-        $json = json_encode($exportData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $filename = $this->collection->slug . '.json';
-        
-        $gameName = \Illuminate\Support\Str::slug($this->collection->game->name ?? 'game');
-        $path = '/static/game-manager/' . $gameName . '/json/' . $filename;
-
         try {
-            Storage::disk('s3')->put($path, $json, 'public');
+            $path = $this->collection->uploadToS3();
             $this->emit('notify', '✅ Successfully uploaded to S3: ' . $path);
         } catch (\Exception $e) {
             $this->emit('notify', '❌ Failed to upload to S3: ' . $e->getMessage(), 'error');

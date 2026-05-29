@@ -18,6 +18,8 @@ class EntryEditor extends Component
     public $isNew = false;
     public $showRawJson = false;
     public $rawJson = '';
+    public $isS3Configured = false;
+    public $saveToS3 = false;
 
     protected $listeners = ['refreshRelations' => 'loadRelatedOptions'];
 
@@ -39,6 +41,11 @@ class EntryEditor extends Component
 
         $this->rawJson = json_encode($this->formData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $this->loadRelatedOptions();
+
+        $this->isS3Configured = GameCollection::isS3Configured();
+        if ($this->isS3Configured) {
+            $this->saveToS3 = true;
+        }
     }
 
     /**
@@ -297,7 +304,17 @@ class EntryEditor extends Component
             $this->entry = $entry;
             $this->entryId = $entry->id;
             $this->isNew = false;
-            $this->emit('notify', 'Entry created successfully!');
+
+            if ($this->isS3Configured && $this->saveToS3) {
+                try {
+                    $path = $this->collection->uploadToS3();
+                    session()->flash('notify', '✅ Entry created & uploaded to S3!');
+                } catch (\Exception $e) {
+                    session()->flash('notify', '❌ Failed to upload to S3: ' . $e->getMessage());
+                }
+            } else {
+                session()->flash('notify', 'Entry created successfully!');
+            }
 
             // Redirect to edit page
             return redirect()->route('entries.edit', [
@@ -307,7 +324,17 @@ class EntryEditor extends Component
         } else {
             $this->entry->data = $this->formData;
             $this->entry->save();
-            $this->emit('notify', 'Entry saved successfully!');
+
+            if ($this->isS3Configured && $this->saveToS3) {
+                try {
+                    $path = $this->collection->uploadToS3();
+                    $this->emit('notify', '✅ Entry saved & uploaded to S3!');
+                } catch (\Exception $e) {
+                    $this->emit('notify', '❌ Failed to upload to S3: ' . $e->getMessage(), 'error');
+                }
+            } else {
+                $this->emit('notify', 'Entry saved successfully!');
+            }
         }
     }
 
@@ -326,7 +353,17 @@ class EntryEditor extends Component
             $this->entry->save();
         }
 
-        $this->emit('notify', 'Entry saved!');
+        if ($this->isS3Configured && $this->saveToS3) {
+            try {
+                $path = $this->collection->uploadToS3();
+                session()->flash('notify', '✅ Entry saved & uploaded to S3!');
+            } catch (\Exception $e) {
+                session()->flash('notify', '❌ Failed to upload to S3: ' . $e->getMessage());
+            }
+        } else {
+            session()->flash('notify', 'Entry saved!');
+        }
+
         return redirect()->route('entries.index', $this->collection->slug);
     }
 

@@ -1292,5 +1292,13 @@
             }, 3000);
         }
     </script>
+
+    @if(session()->has('notify'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showNotification("{{ session('notify') }}");
+            });
+        </script>
+    @endif
 </body>
 </html>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class GameCollection extends Model
 {
@@ -67,5 +68,61 @@ class GameCollection extends Model
             ->pluck('parent_key')
             ->unique()
             ->values();
+    }
+
+    /**
+     * Check if S3 is configured in the application.
+     */
+    public static function isS3Configured()
+    {
+        return !empty(config('filesystems.disks.s3.key')) &&
+               !empty(config('filesystems.disks.s3.secret')) &&
+               !empty(config('filesystems.disks.s3.bucket'));
+    }
+
+    /**
+     * Export collection entries to a JSON string and upload to S3.
+     * Returns the destination path on S3.
+     */
+    public function uploadToS3()
+    {
+        if ($this->type === 'static') {
+            $entry = GameEntry::where('game_collection_id', $this->id)->first();
+            $data = $entry ? $entry->data : new \stdClass();
+            $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        } else {
+            $entries = GameEntry::where('game_collection_id', $this->id)
+                ->orderBy('sort_order')
+                ->get()
+                ->pluck('data');
+
+            $idField = $this->id_field;
+            $exportData = [];
+
+            foreach ($entries as $data) {
+                $key = data_get($data, $idField) 
+                    ?? data_get($data, strtolower($idField)) 
+                    ?? data_get($data, strtoupper($idField))
+                    ?? data_get($data, 'id')
+                    ?? data_get($data, 'ID');
+                    
+                if ($key !== null && $key !== '') {
+                    $exportData[$key] = $data;
+                } else {
+                    $exportData[] = $data;
+                }
+            }
+
+            $exportData = (object) $exportData;
+            $json = json_encode($exportData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
+
+        $filename = $this->slug . '.json';
+        $gameName = \Illuminate\Support\Str::slug($this->game->name ?? 'game');
+        $path = '/static/game-manager/' . $gameName . '/json/' . $filename;
+
+        \Illuminate\Support\Facades\Storage::disk('s3')->put($path, $json, 'public');
+
+        return $path;
     }
 }

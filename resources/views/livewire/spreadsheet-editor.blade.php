@@ -10,14 +10,24 @@
         </div>
         <div class="page-header-row">
             <h1 class="page-title">📊 {{ $collection->display_name }} — Spreadsheet Edit</h1>
-            <div class="btn-group">
-                <a href="{{ route('entries.index', $collection->slug) }}" class="btn btn-secondary">← Back to List</a>
-                <button wire:click="saveAll" class="btn btn-primary {{ !$hasChanges ? 'btn-disabled' : '' }}" {{ !$hasChanges ? 'disabled' : '' }}>
-                    💾 Save All Changes
-                    @if($hasChanges)
-                        <span class="badge badge-warning" style="margin-left: 6px; font-size: 10px;">unsaved</span>
-                    @endif
-                </button>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                @if($isS3Configured)
+                    <label class="form-checkbox-group" style="cursor: pointer; user-select: none; background: rgba(99, 102, 241, 0.05); border: 1px solid var(--border-accent); padding: 8px 12px; border-radius: var(--radius-sm); transition: all 150ms; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(99, 102, 241, 0.1)'" onmouseout="this.style.background='rgba(99, 102, 241, 0.05)'">
+                        <input type="checkbox" wire:model="saveToS3" class="form-checkbox" style="accent-color: var(--accent-primary); width: 16px; height: 16px; margin: 0; cursor: pointer;">
+                        <span class="form-checkbox-label" style="font-weight: 600; color: var(--text-primary); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                            ☁️ Save to S3 too
+                        </span>
+                    </label>
+                @endif
+                <div class="btn-group">
+                    <a href="{{ route('entries.index', $collection->slug) }}" class="btn btn-secondary">← Back to List</a>
+                    <button wire:click="saveAll" class="btn btn-primary {{ !$hasChanges ? 'btn-disabled' : '' }}" {{ !$hasChanges ? 'disabled' : '' }}>
+                        💾 Save All Changes
+                        @if($hasChanges)
+                            <span class="badge badge-warning" style="margin-left: 6px; font-size: 10px;">unsaved</span>
+                        @endif
+                    </button>
+                </div>
             </div>
         </div>
     </div>

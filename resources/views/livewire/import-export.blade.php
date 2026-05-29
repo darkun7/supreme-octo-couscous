@@ -4,7 +4,9 @@
             {{ $showImport ? '✕ Close' : '📥 Import JSON' }}
         </button>
         <button wire:click="export" class="btn btn-sm btn-secondary">📤 Export JSON</button>
-        <button wire:click="uploadToS3" class="btn btn-sm btn-secondary">☁️ Upload S3</button>
+        @if($isS3Configured)
+            <button wire:click="uploadToS3" class="btn btn-sm btn-secondary">☁️ Upload S3</button>
+        @endif
     </div>
 
     @if($showImport)

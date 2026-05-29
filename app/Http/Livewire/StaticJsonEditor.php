@@ -21,6 +21,7 @@ class StaticJsonEditor extends Component
     public $lastSaved;
     public $showImport = false;
     public $importJson = '';
+    public $isS3Configured = false;
 
     public function mount($slug)
     {
@@ -53,6 +54,7 @@ class StaticJsonEditor extends Component
         }
 
         $this->lastSaved = $entry ? $entry->updated_at->diffForHumans() : null;
+        $this->isS3Configured = GameCollection::isS3Configured();
     }
 
     public function saveJson()

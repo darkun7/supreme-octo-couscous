@@ -43,9 +43,11 @@
                 📤 Export
             </button>
 
-            <button wire:click="uploadToS3" class="btn btn-secondary">
-                ☁️ Upload S3
-            </button>
+            @if($isS3Configured)
+                <button wire:click="uploadToS3" class="btn btn-secondary">
+                    ☁️ Upload S3
+                </button>
+            @endif
 
             <button wire:click="saveJson" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px;">
                 💾 Save

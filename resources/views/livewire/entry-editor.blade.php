@@ -13,12 +13,22 @@
                 {{ $collection->icon }}
                 {{ $isNew ? 'New ' . $collection->display_name : 'Edit: ' . ($formData[$collection->name_field] ?? 'Unnamed') }}
             </h1>
-            <div class="btn-group">
-                <button wire:click="toggleRawJson" class="btn btn-secondary">
-                    {{ $showRawJson ? '📝 Form View' : '{ } JSON View' }}
-                </button>
-                <button wire:click="save" class="btn btn-success">💾 Save</button>
-                <button wire:click="saveAndBack" class="btn btn-primary">💾 Save & Back</button>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                @if($isS3Configured)
+                    <label class="form-checkbox-group" style="cursor: pointer; user-select: none; background: rgba(99, 102, 241, 0.05); border: 1px solid var(--border-accent); padding: 8px 12px; border-radius: var(--radius-sm); transition: all 150ms; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(99, 102, 241, 0.1)'" onmouseout="this.style.background='rgba(99, 102, 241, 0.05)'">
+                        <input type="checkbox" wire:model="saveToS3" class="form-checkbox" style="accent-color: var(--accent-primary); width: 16px; height: 16px; margin: 0; cursor: pointer;">
+                        <span class="form-checkbox-label" style="font-weight: 600; color: var(--text-primary); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                            ☁️ Save to S3 too
+                        </span>
+                    </label>
+                @endif
+                <div class="btn-group">
+                    <button wire:click="toggleRawJson" class="btn btn-secondary">
+                        {{ $showRawJson ? '📝 Form View' : '{ } JSON View' }}
+                    </button>
+                    <button wire:click="save" class="btn btn-success">💾 Save</button>
+                    <button wire:click="saveAndBack" class="btn btn-primary">💾 Save & Back</button>
+                </div>
             </div>
         </div>
     </div>
