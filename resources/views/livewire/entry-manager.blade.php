@@ -81,18 +81,18 @@
                                             @if(is_array($val))
                                                 <div class="tag-list">
                                                     @foreach(array_slice($val, 0, 3) as $relVal)
-                                                        <span class="tag">{{ $relVal }}</span>
+                                                        <span class="tag">{{ Str::limit((string) $relVal, 30) }}</span>
                                                     @endforeach
                                                     @if(count($val) > 3)
                                                         <span class="tag" style="background:var(--bg-tertiary); color:var(--text-tertiary);">+{{ count($val) - 3 }}</span>
                                                     @endif
                                                 </div>
                                             @else
-                                                <span class="tag">{{ $val ?? '—' }}</span>
+                                                <span class="tag">{{ Str::limit((string) ($val ?? '—'), 30) }}</span>
                                             @endif
                                         @elseif($field->type === 'array')
                                             @if(is_array($val))
-                                                <span class="text-tertiary text-sm">[{{ count($val) }} items]</span>
+                                                <span class="truncate" title="{{ implode(', ', array_map('strval', array_slice($val, 0, 20))) }}">{{ Str::limit(implode(', ', array_map('strval', $val)), 50) }}</span>
                                             @else
                                                 <span class="text-tertiary">—</span>
                                             @endif
@@ -104,7 +104,11 @@
                                         @elseif($field->type === 'number')
                                             <span class="font-mono" style="color:var(--warning)">{{ $val ?? 0 }}</span>
                                         @else
-                                            <span class="truncate">{{ $val ?? '—' }}</span>
+                                            @if(is_array($val))
+                                                <span class="truncate" title="{{ implode(', ', array_map('strval', array_slice($val, 0, 20))) }}">{{ Str::limit(implode(', ', array_map('strval', $val)), 50) }}</span>
+                                            @else
+                                                <span class="truncate">{{ Str::limit((string) ($val ?? '—'), 50) }}</span>
+                                            @endif
                                         @endif
                                     </td>
                                 @endforeach
