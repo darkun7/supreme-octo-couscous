@@ -155,6 +155,23 @@ class CollectionManager extends Component
         }
     }
 
+    public function reorderCollections($orderedIds)
+    {
+        $gameId = $this->getActiveGameId();
+        if (!$gameId) return;
+
+        foreach ($orderedIds as $index => $id) {
+            GameCollection::where('id', $id)
+                ->where('game_id', $gameId)
+                ->update(['sort_order' => $index]);
+        }
+
+        $this->loadCollections();
+        $this->emit('notify', 'Collection order updated!');
+
+        return redirect()->route('collections.index');
+    }
+
     public function render()
     {
         return view('livewire.collection-manager');

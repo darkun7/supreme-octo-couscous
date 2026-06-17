@@ -17,9 +17,9 @@
     <div class="page-content">
         {{-- Collection Grid --}}
         @if($collections->count())
-            <div class="collection-grid">
+            <div class="collection-grid" id="collections-grid" wire:ignore>
                 @foreach($collections as $col)
-                    <div class="collection-card">
+                    <div data-id="{{ $col->id }}" class="collection-card sortable-item" style="cursor: grab;">
                         <div class="collection-card-actions">
                             <button wire:click="edit({{ $col->id }})" class="btn btn-sm btn-secondary btn-icon" title="Edit">✏️</button>
                             <a href="{{ route('collections.fields', $col->slug) }}" class="btn btn-sm btn-secondary btn-icon" title="Fields">🔧</a>
@@ -129,4 +129,37 @@
             </div>
         </div>
     @endif
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('livewire:load', function () {
+            var el = document.getElementById('collections-grid');
+            if (el) {
+                var sortable = Sortable.create(el, {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    filter: '.collection-card-actions, a, button',
+                    preventOnFilter: false,
+                    onEnd: function (evt) {
+                        var order = [];
+                        document.querySelectorAll('#collections-grid .sortable-item').forEach(function(item) {
+                            order.push(item.getAttribute('data-id'));
+                        });
+                        @this.reorderCollections(order);
+                    },
+                });
+            }
+        });
+    </script>
+    <style>
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: var(--bg-input);
+            transform: scale(0.98);
+            border: 2px dashed var(--accent-primary);
+        }
+        .sortable-item:active {
+            cursor: grabbing;
+        }
+    </style>
 </div>
