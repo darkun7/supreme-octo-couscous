@@ -33,7 +33,14 @@
 
                         <a href="{{ route('entries.index', $col->slug) }}">
                             <div class="collection-card-icon">{{ $col->icon }}</div>
-                            <div class="collection-card-name">{{ $col->display_name }}</div>
+                            <div class="collection-card-name">
+                                {{ $col->display_name }}
+                                @if($col->type === 'static')
+                                    <span class="badge badge-warning" style="margin-left: 6px; vertical-align: middle; font-size: 10px;">Static</span>
+                                @else
+                                    <span class="badge badge-info" style="margin-left: 6px; vertical-align: middle; font-size: 10px;">Tabular</span>
+                                @endif
+                            </div>
                             <div class="collection-card-desc">{{ $col->description ?: 'No description' }}</div>
                             <div class="collection-card-stats">
                                 <div class="collection-card-stat">
@@ -79,6 +86,16 @@
                     <label class="form-label">Display Name <span class="required">*</span></label>
                     <input type="text" wire:model="display_name" class="form-input" placeholder="e.g. Enemies, Skills, Items">
                     @error('display_name') <div class="form-help" style="color:var(--danger)">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Collection Type <span class="required">*</span></label>
+                    <select wire:model="type" class="form-select">
+                        <option value="tabular">📊 Tabular (Spreadsheet/List)</option>
+                        <option value="static">🌲 Static (Raw Nested JSON)</option>
+                    </select>
+                    @error('type') <div class="form-help" style="color:var(--danger)">{{ $message }}</div> @enderror
+                    <div class="form-help">Tabular is best for repetitive database-like records (e.g. items, monsters). Static is best for single-entry hierarchical configurations (e.g. game settings, HUD layout).</div>
                 </div>
 
                 <div class="form-row">

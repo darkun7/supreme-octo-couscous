@@ -19,6 +19,7 @@ class CollectionManager extends Component
     public $description = '';
     public $id_field = 'ID';
     public $name_field = 'Name';
+    public $type = 'tabular';
 
     // Delete confirmation
     public $confirmingDelete = null;
@@ -30,6 +31,7 @@ class CollectionManager extends Component
         'description' => 'nullable|string',
         'id_field' => 'required|string|max:255',
         'name_field' => 'required|string|max:255',
+        'type' => 'required|string|in:tabular,static',
     ];
 
     public function mount()
@@ -76,6 +78,7 @@ class CollectionManager extends Component
         $this->description = $collection->description;
         $this->id_field = $collection->id_field;
         $this->name_field = $collection->name_field;
+        $this->type = $collection->type;
         $this->showForm = true;
     }
 
@@ -91,6 +94,7 @@ class CollectionManager extends Component
             'description' => $this->description,
             'id_field' => $this->id_field,
             'name_field' => $this->name_field,
+            'type' => $this->type,
         ];
 
         if ($this->editingId) {
@@ -141,6 +145,7 @@ class CollectionManager extends Component
         $this->description = '';
         $this->id_field = 'ID';
         $this->name_field = 'Name';
+        $this->type = 'tabular';
     }
 
     public function updatedName($value)
